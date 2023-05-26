@@ -46,6 +46,7 @@ import torch
 from torchvision import transforms
 from PIL import Image
 from muse import MaskGitVQGAN
+import numpy as np
 
 # Load the pre-trained vq model from the hub
 vq_model = MaskGitVQGAN.from_pretrained("openMUSE/maskgit-vqgan-imagenet-f16-256")
@@ -61,7 +62,7 @@ encode_transform = = transforms.Compose(
 image = Image.open("...") #
 pixel_values = encode_transform(image).unsqueeze(0)
 image_tokens = vq_model.encode(pixel_values)
-rec_image = vq_model.decode(image_tokens)
+rec_image = vq_model.decode_code(image_tokens)
 
 # Convert to PIL images
 rec_image = 2.0 * rec_image - 1.0
@@ -129,7 +130,7 @@ loss.backward()
 # to generate images
 class_ids = torch.randint(0, 1000, (4,)) # random class ids
 generated_tokens = maskgit_model.generate(class_ids=class_ids)
-rec_images = vq_model.decode(generated_tokens)
+rec_images = vq_model.decode_code(generated_tokens)
 ```
 
 ___Note___:
